@@ -33,8 +33,9 @@ class FeedWidget extends \Magento\Framework\View\Element\Template implements \Ma
     public function getFeedurl() {
 		if($this->getData('apiurl')==''){
 			return DEFAULT_FEED_URL;
+		} else {
+			return $this->getData('apiurl');
 		}
-        return (int) $this->getData('apiurl');
     }
 
      /**
