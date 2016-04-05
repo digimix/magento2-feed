@@ -1,0 +1,42 @@
+<?php
+$canshowImg = $this->canShowImage();
+$feedurl = $this->getFeedurl();
+?>
+
+<div class="block-content feed">
+	<ul class="featured-tips gallery js-flickity" data-flickity-options='{ "imagesLoaded": true, "percentPosition": true, "lazyLoad": true, "wrapAround": true, "pageDots": false }'>
+
+	    <?php
+	    $wp_posts_array = json_decode(file_get_contents($feedurl));
+	    $wp_post_list = array();
+
+	    foreach ( $wp_posts_array->posts as $wp_post_items ) :
+
+		    echo $wp_post_items;
+	        $arrayDate = date("ymdHi", strtotime($wp_post_items->date ));
+
+	        $wp_post_list[$arrayDate]['Title'] = $wp_post_items->title;
+	        $wp_post_list[$arrayDate]['Date'] = date('F j, Y', strtotime($wp_post_items->date ));
+	        $wp_post_list[$arrayDate]['Post_Time'] = date('c', strtotime($wp_post_items->date ));
+	        $wp_post_list[$arrayDate]['Excerpt'] = $wp_post_items->excerpt;
+	        $wp_post_list[$arrayDate]['Link'] = $wp_post_items->url;
+	        $wp_post_list[$arrayDate]['Img'] = $wp_post_items->attachments[0]->url;
+	    endforeach;
+
+	    //print_r($wp_post_items);
+
+	    // Key reverse sort to get events in date order
+		// ksort($wp_post_list);
+
+	    foreach ($wp_post_list as $wp_post_item) :
+			/*
+					if ( ($wp_post_item['Img'] && $canshowImg) ) {
+						echo '<img class="img-responsive" width="<?=$this->getImagewidth();?>" height="<?=$this->getImageheight()?>" src="'. $wp_post_item['Img'] .'">';
+					}
+			*/
+
+	        echo '<li class="gallery-cell"><article class="ricks-tip"><header><h3 class="entry-title"><a href="'. $wp_post_item['Link'] .'">'. $wp_post_item['Title'] .'</a></h3><time class="updated" datetime="'. $wp_post_item['Post_Time'] .'">'. $wp_post_item['Date'] .'</time></header><div class="entry-summary">'.$wp_post_item['Excerpt'].'</div></article></li>';
+
+	    endforeach; ?>
+	</ul>
+</div>
